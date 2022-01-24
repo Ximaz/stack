@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "stack.h"
 
-struct Stack *StackInit(const int capacity)
+struct Stack *StackInit(const int capacity, const _Bool upgradable)
 {
     struct Stack *stack = malloc(sizeof(struct Stack));
     if (stack != NULL)
     {
-        stack->capacity = capacity;
         stack->top = 0;
+        stack->capacity = capacity;
+        stack->upgradable = upgradable;
         stack->values = malloc(stack->capacity * sizeof(int *));
     }
     return stack;
@@ -17,10 +17,23 @@ struct Stack *StackInit(const int capacity)
 
 void StackPush(struct Stack *stack, const int e)
 {
+    if (stack->upgradable && StackIsFull(stack)) {
+        stack->values = realloc(stack->values, ++stack->capacity * sizeof(int *));
+        if (stack->values == NULL) {
+            printf("[ERROR] : Unabled to reallocate the stack !\n");
+            return;
+        }
+    }
+
     if (!StackIsFull(stack))
         stack->values[stack->top++] = e;
     else
         printf("[ERROR] : Stack is full !\n");
+}
+
+int StackIsFull(struct Stack *stack)
+{
+    return stack->top == stack->capacity;
 }
 
 int StackPop(struct Stack *stack)
@@ -32,15 +45,9 @@ int StackPop(struct Stack *stack)
     return -1;
 }
 
-void StackDisplay(struct Stack *stack)
+int StackIsEmpty(struct Stack *stack)
 {
-    if (StackIsEmpty(stack))
-        return;
-
-    for (int i = 0; i < stack->top; i++)
-        printf("|%d", stack->values[i]);
-
-    printf("|\n");
+    return stack->top == -1;
 }
 
 void StackClear(struct Stack *stack)
@@ -54,12 +61,13 @@ void StackDestroy(struct Stack *stack)
     free(stack);
 }
 
-int StackIsEmpty(struct Stack *stack)
+void StackDisplay(struct Stack *stack)
 {
-    return stack->top == -1;
-}
+    if (StackIsEmpty(stack))
+        return;
 
-int StackIsFull(struct Stack *stack)
-{
-    return stack->top == stack->capacity;
+    for (int i = 0; i < stack->top; i++)
+        printf("|%d", stack->values[i]);
+
+    printf("|\n");
 }
