@@ -18,7 +18,7 @@ make run
 #include "stack/stack.h"
 
 #define STACK_SIZE 10
-#define STACK_UPGADABLE 1 // Or 1.
+#define STACK_UPGADABLE 1 // Either 0 or 1.
 
 int main(const int argc, const char **argv)
 {
