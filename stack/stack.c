@@ -12,15 +12,19 @@ struct Stack *StackInit(const int capacity, const _Bool upgradable)
         stack->upgradable = upgradable;
         stack->values = malloc(stack->capacity * sizeof(int *));
     }
+    else
+        printf("[ERROR] : Unabled to allocate memory to initialize the stack !\n");
     return stack;
 }
 
 void StackPush(struct Stack *stack, const int e)
 {
-    if (stack->upgradable && StackIsFull(stack)) {
+    if (stack->upgradable && StackIsFull(stack))
+    {
         stack->values = realloc(stack->values, ++stack->capacity * sizeof(int *));
-        if (stack->values == NULL) {
-            printf("[ERROR] : Unabled to reallocate the stack !\n");
+        if (stack->values == NULL)
+        {
+            printf("[ERROR] : Unabled to reallocate memory for the stack values !\n");
             return;
         }
     }
