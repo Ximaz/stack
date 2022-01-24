@@ -1,7 +1,7 @@
 typedef struct Stack
 {
-    int cursor;
-    int size;
+    int top;
+    int capacity;
     int *values;
 } Stack;
 

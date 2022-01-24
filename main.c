@@ -11,7 +11,7 @@ int main(const int argc, const char **argv)
     struct Stack *stack = StackInit(STACK_SIZE);
 
     // Fill the stack with numbers :
-    for (int i = 0; i < stack->size; i++)
+    for (int i = 0; i < stack->capacity; i++)
         StackPush(stack, i);
 
     // Display the full-filled stack :

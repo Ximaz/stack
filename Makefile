@@ -1,7 +1,7 @@
 MODULES=stack/stack.c
 EXEC=main
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS=-Wall -Wextra -Werror -pedantic
 
 all: $(EXEC)
 
