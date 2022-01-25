@@ -17,7 +17,7 @@ make run
 
 #include "stack/stack.h"
 
-int main(const int argc, const char **argv)
+int main()
 {
     // Creating a new stack which can contain STACK_SIZE element :
     Stack *stack = newStack();

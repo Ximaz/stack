@@ -6,7 +6,7 @@ CFLAGS=-Wall -Wextra -Werror -pedantic
 all: $(EXEC)
 
 $(EXEC).o: $(EXEC).c
-	$(CC) -c $(EXEC).c
+	$(CC) -c $(EXEC).c $(CFLAGS)
 
 $(EXEC): $(EXEC).o
 	$(CC) -o $(EXEC) $(EXEC).o $(MODULES) $(CFLAGS)
@@ -19,7 +19,7 @@ fclean: clean
 
 re: fclean all
 
-run: re
+run: re clean
 	./$(EXEC)
 
 .PHONY: all clean fclean re
