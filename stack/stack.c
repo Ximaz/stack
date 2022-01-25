@@ -23,8 +23,7 @@ int stack_push(Stack *this, int value)
 {
     if (this->is_full(this))
     {
-        this->capacity++;
-        this->values = realloc(this->values, this->capacity * sizeof(int));
+        this->values = realloc(this->values, (++this->capacity) * sizeof(int));
         if (this->values == NULL)
         {
             if (!this->error)
