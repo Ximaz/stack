@@ -35,12 +35,10 @@ int main()
     return 0;
 
 stackAllocationError:
-    printf("Error: Memory allocation.\n");
-
+    printf("Error: Stack allocation.\n");
     return STACK_ALLOCATION_ERROR;
 
 stackReallocationError:
     printf("Error: Stack reallocation.\n");
-
     return STACK_REALLOCATION_ERROR;
 }
