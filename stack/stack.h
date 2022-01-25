@@ -1,18 +1,23 @@
-#include <unistd.h>
+#ifndef STACK_H_
+#define STACK_H_
 
-typedef struct Stack
+#include <stdbool.h>
+
+typedef struct s_stack
 {
     int top;
     int capacity;
-    _Bool upgradable;
+    bool upgradable;
     int *values;
 } Stack;
 
-struct Stack *StackInit(const int size, const _Bool upgradable);
-void StackPush(struct Stack *stack, const int e);
-int StackIsFull(struct Stack *stack);
-int StackPop(struct Stack *stack);
-int StackIsEmpty(struct Stack *stack);
-void StackClear(struct Stack *stack);
-void StackDestroy(struct Stack *stack);
-void StackDisplay(struct Stack *stack);
+Stack *StackInit(int size, bool upgradable);
+void StackDestroy(Stack *this);
+void StackPush(Stack *this, int value);
+bool StackIsFull(Stack *this);
+int StackPop(Stack *this);
+bool StackIsEmpty(Stack *this);
+void StackClear(Stack *this);
+void StackDisplay(Stack *this);
+
+#endif

@@ -23,7 +23,7 @@ make run
 int main(const int argc, const char **argv)
 {
     // Creating a new stack which can contain STACK_SIZE element :
-    struct Stack *stack = StackInit(STACK_SIZE, STACK_UPGADABLE);
+    struct Stack *this = StackInit(STACK_SIZE, STACK_UPGADABLE);
 
     // Fill the stack with numbers :
     for (int i = 0; i < stack->capacity; i++)
