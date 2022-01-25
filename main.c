@@ -3,31 +3,44 @@
 
 #include "stack/stack.h"
 
-#define STACK_SIZE 10
-#define STACK_UPGADABLE 1 // Either 0 or 1.
-
 int main(const int argc, const char **argv)
 {
     // Creating a new stack which can contain STACK_SIZE element :
-    Stack *stack = StackInit(STACK_SIZE, STACK_UPGADABLE);
+    Stack *stack = newStack();
+    if (stack == NULL)
+        goto stackAllocationError;
 
     // Fill the stack with numbers :
-    for (int i = 0; i < stack->capacity; i++)
-        StackPush(stack, i);
+    for (unsigned int i = 0; i < 10; i++)
+    {
+        if (stack->push(stack, i) == STACK_REALLOCATION_ERROR && stack->error)
+            goto stackReallocationError;
+    }
 
     // A simple test to check that the upgrade feature works :
-    StackPush(stack, 10);
+    if (stack->push(stack, 10) == STACK_REALLOCATION_ERROR && stack->error)
+        goto stackReallocationError;
 
     // Display the full-filled stack :
-    StackDisplay(stack);
+    stack->display(stack);
 
     // Clear the stack :
-    StackClear(stack);
+    stack->clear(stack);
 
     // Display again the empty stack :
-    StackDisplay(stack);
+    stack->display(stack);
 
     // Destroy the stack using free :
-    StackDestroy(stack);
+    stack->destroy(stack);
     return 0;
+
+stackAllocationError:
+    printf("Error: Memory allocation.\n");
+
+    return STACK_ALLOCATION_ERROR;
+
+stackReallocationError:
+    printf("Error: Stack reallocation.\n");
+
+    return STACK_REALLOCATION_ERROR;
 }

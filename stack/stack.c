@@ -2,76 +2,96 @@
 #include <stdlib.h>
 #include "stack.h"
 
-Stack *StackInit(int capacity, bool upgradable)
+void stack_init(Stack *this)
 {
-    Stack *this = malloc(sizeof(Stack));
     if (this != NULL)
     {
         this->top = 0;
-        this->capacity = capacity;
-        this->upgradable = upgradable;
-        this->values = malloc(this->capacity * sizeof(int *));
+        this->capacity = 1;
+        this->error = false;
+        this->values = malloc(sizeof(int));
     }
-    else
-        printf("[ERROR] : Unabled to allocate memory to initialize the this !\n");
-    return this;
 }
 
-void StackDestroy(Stack *this)
+void stack_destroy(Stack *this)
 {
     free(this->values);
     free(this);
 }
 
-void StackPush(Stack *this, int value)
+int stack_push(Stack *this, int value)
 {
-    if (this->upgradable && StackIsFull(this))
+    if (this->is_full(this))
     {
-        this->values = realloc(this->values, (this->capacity += sizeof(int)) * sizeof(int));
+        this->capacity++;
+        this->values = realloc(this->values, this->capacity * sizeof(int));
         if (this->values == NULL)
         {
-            printf("[ERROR] : Unabled to reallocate memory for the this values !\n");
-            return;
+            if (!this->error)
+                this->error = true;
+            return STACK_REALLOCATION_ERROR;
         }
     }
-
-    if (!StackIsFull(this))
-        this->values[this->top++] = value;
-    else
-        printf("[ERROR] : Stack is full !\n");
+    if (this->error)
+        this->error = false;
+    this->values[this->top++] = value;
+    return 0;
 }
 
-bool StackIsFull(Stack *this)
+bool stack_is_full(Stack *this)
 {
     return this->top == this->capacity;
 }
 
-int StackPop(Stack *this)
+int stack_pop(Stack *this)
 {
-    if (!StackIsEmpty(this))
+    if (!this->is_empty(this))
+    {
+        if (this->error)
+            this->error = false;
         return this->values[this->top--];
+    }
 
-    printf("[ERROR] : Stack is empty !\n");
-    return -1;
+    if (!this->error)
+        this->error = true;
+    return EMPTY_STACK_ERROR;
 }
 
-bool StackIsEmpty(Stack *this)
+bool stack_is_empty(Stack *this)
 {
-    return this->top == -1;
+    return this->top == 0;
 }
 
-void StackClear(Stack *this)
+void stack_clear(Stack *this)
 {
-    this->top = -1;
+    this->top = 0;
 }
 
-void StackDisplay(Stack *this)
+void stack_display(Stack *this)
 {
-    if (StackIsEmpty(this))
+    if (this->is_empty(this))
         return;
 
-    for (int i = 0; i < this->top; i++)
+    for (unsigned int i = 0; i < this->top; i++)
         printf("|%d", this->values[i]);
 
     printf("|\n");
+}
+
+Stack *newStack()
+{
+    Stack *stack = malloc(sizeof(Stack));
+    if (stack == NULL)
+        return NULL;
+
+    stack->init = &stack_init;
+    stack->destroy = &stack_destroy;
+    stack->push = &stack_push;
+    stack->pop = &stack_pop;
+    stack->is_empty = &stack_is_empty;
+    stack->is_full = &stack_is_full;
+    stack->clear = &stack_clear;
+    stack->display = &stack_display;
+    stack->init(stack);
+    return stack;
 }

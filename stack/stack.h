@@ -3,21 +3,30 @@
 
 #include <stdbool.h>
 
+#define STACK_ALLOCATION_ERROR 1
+#define STACK_REALLOCATION_ERROR 2
+#define EMPTY_STACK_ERROR 3
+
 typedef struct s_stack
 {
-    int top;
-    int capacity;
-    bool upgradable;
+    void (*init)(struct s_stack *this);
+    void (*destroy)(struct s_stack *this);
+
+    int (*push)(struct s_stack *this, int value);
+    int (*pop)(struct s_stack *this);
+    void (*clear)(struct s_stack *this);
+
+    bool (*is_full)(struct s_stack *this);
+    bool (*is_empty)(struct s_stack *this);
+
+    void (*display)(struct s_stack *this);
+
+    unsigned int top;
+    unsigned int capacity;
+    bool error;
     int *values;
 } Stack;
 
-Stack *StackInit(int size, bool upgradable);
-void StackDestroy(Stack *this);
-void StackPush(Stack *this, int value);
-bool StackIsFull(Stack *this);
-int StackPop(Stack *this);
-bool StackIsEmpty(Stack *this);
-void StackClear(Stack *this);
-void StackDisplay(Stack *this);
+Stack *newStack();
 
 #endif
