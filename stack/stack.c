@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "stack.h"
 
 void stack_init(Stack *this)
@@ -92,5 +93,8 @@ Stack *newStack()
     stack->clear    = &stack_clear;
     stack->display  = &stack_display;
     stack->init(stack);
+
+    assert(stack->is_empty(stack));
+
     return stack;
 }

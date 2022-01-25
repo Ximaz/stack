@@ -5,8 +5,9 @@
 
 int main()
 {
-    // Creating a new stack which can contain STACK_SIZE element :
+    // Creating a new empty stack :
     Stack *stack = newStack();
+
     if (stack == NULL)
         goto stackAllocationError;
 
