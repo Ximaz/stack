@@ -1,7 +1,7 @@
 # Setup :
 ```bash
 # Clones the repository :
-git clone https://github.com/Ximaz/stack/
+git clone https://github.com/Ximaz/stack.git
 
 # Go to the repository's folder :
 cd stack
