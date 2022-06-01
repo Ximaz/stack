@@ -1,25 +1,35 @@
-MODULES=stack/stack.c
-EXEC=main
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -pedantic
+LIBFLAGS=-I./include -L./ -lstack
+CFLAGS=-Wall -Wextra -Werror -Wno-deprecated -pedantic -O3
+SECURE_CFLAGS=-fsanitize=address -fsanitize=undefined# -fsanitize=leak
+SRC=src/stack.c
+OBJ=*.o
 
-all: $(EXEC)
+NAME=stack
+TEST=main.c
+LIBNAME=libstack.a
 
-$(EXEC).o: $(EXEC).c
-	$(CC) -c $(EXEC).c $(CFLAGS)
+$(NAME): $(LIBNAME)
+	$(CC) $(CFLAGS) $(SECURE_CFLAGS) -o $(NAME) $(TEST) $(LIBFLAGS)
 
-$(EXEC): $(EXEC).o
-	$(CC) -o $(EXEC) $(EXEC).o $(MODULES) $(CFLAGS)
+$(LIBNAME): $(OBJ)
+	ar rc $(LIBNAME) obj/$(OBJ)
+
+$(OBJ): $(SRC) obj/
+	$(CC) $(CFLAGS) $(SECURE_CFLAGS) -c $(SRC)
+	mv $(OBJ) obj/
+
+obj/:
+	mkdir -p obj
+
+all: $(NAME)
 
 clean:
-	rm -rf *.o
+	rm -rf obj/$(OBJ)
 
-fclean: clean
-	rm -rf $(EXEC)
+fclean:
+	rm -rf $(LIBNAME) $(NAME)
 
-re: fclean all
+re: fclean clean
 
-run: re clean
-	./$(EXEC)
-
-.PHONY: all clean fclean re
+.PHONY: all clean re

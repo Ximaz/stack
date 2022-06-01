@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-
-#include "stack.h"
+#include "../include/stack.h"
 
 void stack_init(Stack *this)
 {
-    if (this != NULL)
-    {
-        this->top = 0;
-        this->capacity = 1;
-        this->error = false;
-        this->values = malloc(sizeof(int));
-    }
+    if (!this)
+        return;
+    this->top = 0;
+    this->capacity = 1;
+    this->error = false;
+    this->values = (int *) calloc(this->capacity, sizeof(int));
+    if (!this->values)
+        free(this);
 }
 
 void stack_destroy(Stack *this)
@@ -25,8 +24,8 @@ int stack_push(Stack *this, int value)
 {
     if (this->is_full(this))
     {
-        this->values = realloc(this->values, (++this->capacity) * sizeof(int));
-        if (this->values == NULL)
+        this->values = (int *) realloc(this->values, (++this->capacity) * sizeof(int));
+        if (!this->values)
         {
             if (!this->error)
                 this->error = true;
@@ -52,7 +51,6 @@ int stack_pop(Stack *this)
             this->error = false;
         return this->values[this->top--];
     }
-
     if (!this->error)
         this->error = true;
     return EMPTY_STACK_ERROR;
@@ -72,19 +70,17 @@ void stack_display(Stack *this)
 {
     if (this->is_empty(this))
         return;
-
     for (unsigned int i = 0; i < this->top; i++)
         printf("|%d", this->values[i]);
-
     printf("|\n");
 }
 
-Stack *newStack()
+Stack *new_stack()
 {
     Stack *stack = malloc(sizeof(Stack));
-    if (stack == NULL)
-        return NULL;
 
+    if (!stack)
+        return NULL;
     stack->init = &stack_init;
     stack->destroy = &stack_destroy;
     stack->push = &stack_push;
@@ -94,8 +90,5 @@ Stack *newStack()
     stack->clear = &stack_clear;
     stack->display = &stack_display;
     stack->init(stack);
-
-    assert(stack->is_empty(stack));
-
     return stack;
 }

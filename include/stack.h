@@ -1,5 +1,5 @@
-#ifndef STACK_H_
-#define STACK_H_
+#ifndef _STACK_H_
+#define _STACK_H_
 
 #include <stdbool.h>
 
@@ -27,6 +27,6 @@ typedef struct s_stack
     int *values;
 } Stack;
 
-Stack *newStack();
+Stack *new_stack();
 
-#endif
+#endif // _STACK_H_
